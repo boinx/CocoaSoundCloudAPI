@@ -25,6 +25,22 @@ This guide assumes a few things:
 
 We're taking a fresh new iOS Project as an example. Integration into an existing project and/or a Desktop project should be similar.
 
+## CocoaPods
+[CocoaPods](http://cocoapods.org/) is a dependency manager for Xcode projects. 
+If you are already using `CocoaPods` you can include all necessary libraries by adding following lines to your `Podfile`:
+```
+pod 'CocoaSoundCloudAPI', '1.0.1'
+pod 'CocoaSoundCloudUI', '1.0.5'
+```
+and run `pod install`.
+
+Please note, that these `Pods` already include following `dependencies`:
+* `OHAttributedLabel`
+* `JSONKit`
+* `NXOAuth2Client`
+
+:hand: ^5 Everything is set up, and you can skip to the **Usage** section!
+
 ### In the Terminal
 
 1. Go to your project directory.
@@ -45,26 +61,40 @@ We're taking a fresh new iOS Project as an example. Integration into an existing
 
 1. Create a Workspace containing all those submodules added above.
 
-2. To be able to find the Headers, you still need to add `../**` (or `./**` depending on your setup) to the `Header Search Path` of the main project.
+2. To be able to find the Headers, you still need to add `../**`, `./**` or `$PROJECT_DIR/**`, depending on your setup to the `Header Search Path` of the main project.
 
-3. Now the Target needs to know about the new libraries it should link against. So in the _Project_, select the _Target_, and in _Build Phases_ go to the _Link Binary with Libraries_ section. Add the following:
+3. Now the Target needs to know about the new libraries it should build and link against. Note the following dependencies:
 
-    * `libSoundCloudAPI.a` (`SoundCloudAPI.framework` on Mac OS X)
-    * `libOAuth2Client.a` (`OAuth2Client.framework` on Mac OS X)
-    * `libJSONKit.a` (iOS only)
-    * `libOHAttributedLabel.a` (iOS only)
-    * `libSoundCloudUI.a` (iOS only)
-    * `QuartzCore.framework`
-    * `AddressBook.framework`
-    * `AddressBookUI.framework`
-    * `CoreLocation.framework`
-    * `Security.framework`
-    * `CoreGraphics.framework`
-    * `CoreText.framework`
+	**iOS only**
 
-4. Next step is to make sure that the Linker finds everything it needs: So go to the Build settings of the project and add the following to *Other Linker Flags*
+		libSoundCloudAPI.a
+	    libOAuth2Client.a
+    	libJSONKit.a
+	    libOHAttributedLabel.a
+    	libSoundCloudUI.a
+    
+	**OS X only**
+	
+    	SoundCloudAPI.framework
+	    OAuth2Client.framework
 
-        -all_load -ObjC
+	**iOS & OS X**
+
+    	QuartzCore.framework
+	    AddressBook.framework
+	    AddressBookUI.framework
+	    CoreLocation.framework
+	    Security.framework
+	    CoreGraphics.framework
+	    CoreText.framework
+
+	The relevant libraries should be added as dependencies of your target and also linked. In the _Project_, select the _Target_, and in _Build Phases_ add the libraries and frameworks to both the _Target Dependencies_ and _Link Binary with Libraries_ sections.
+
+4. Next step is to make sure that the Linker finds everything it needs: So go to the Build settings of the project and add the following to *Other Linker Flags*, if not already present:
+
+        -ObjC
+
+*Note that previously, due to a linker bug, the flag `-all_load` was also necessary in order to prevent Objective-C categories from being stripped by the linker. If using the latest SDK this is no longer required. However, if you are seeing **Unrecognized Selector** exceptions then you are not using the latest developer tools and should consider upgrading, or adding the `-all_load` flag.*
 
 5. On iOS we need a few graphics: Please move the `SoundCloud.bundle` from the `CocoaSoundCloudUI/` directory to your Resources.
 
