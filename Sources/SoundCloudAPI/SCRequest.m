@@ -159,7 +159,7 @@ sendingProgressHandler:(SCRequestSendingProgressHandler)aProgressHandler
     } else if ([aMethod caseInsensitiveCompare:@"HEAD"]) {
         return SCRequestMethodHEAD;
     } else {
-        NSAssert1([aMethod caseInsensitiveCompare:@"GET"], @"SCRequest only supports 'GET', 'PUT', 'POST' and 'DELETE' as request method. Underlying NXOAuth2Accound uses the request method 'l%'.", aMethod);
+        NSAssert1([aMethod caseInsensitiveCompare:@"GET"], @"SCRequest only supports 'GET', 'PUT', 'POST' and 'DELETE' as request method. Underlying NXOAuth2Accound uses the request method '%@'.", aMethod);
         return SCRequestMethodGET;
     }
 }

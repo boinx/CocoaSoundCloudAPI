@@ -107,7 +107,7 @@ You can get more info about this call and its parameters from the [API documenta
 The parameters dictionary can look something like this:
 
 	[NSDictionary dictionaryWithObjectsAndKeys:
-		fileURL, track[assetdata], //a file URL
+		fileURL, track[asset_data], //a file URL
 		title, track[title],
 		(private) ? @"private" : @"public", @"track[sharing]", //a BOOL
 		@"recording", @"track[type]",
